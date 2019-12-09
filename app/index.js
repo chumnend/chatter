@@ -1,11 +1,10 @@
 const express = require("express");
 const morgan = require("morgan");
-const cors = require("cors");
 const config = require("../config");
 
 // initilaize the application
 const app = express();
-app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 if( config.NODE_ENV !== 'test') {
@@ -14,7 +13,7 @@ if( config.NODE_ENV !== 'test') {
 
 // setup application routes
 app.get("/", (req, res) => {
-    res.send("Hello Word");
+    res.sendFile('index.html', {root: __dirname});
 });
 
 module.exports = app;
