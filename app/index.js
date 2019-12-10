@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const config = require("../config");
+const socketWrapper = require("./socket");
 
 // initilaize the application
 const app = express();
@@ -16,4 +17,4 @@ app.get("/", (req, res) => {
     res.sendFile('index.html', {root: __dirname});
 });
 
-module.exports = app;
+module.exports = socketWrapper(app);
