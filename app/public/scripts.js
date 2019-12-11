@@ -1,43 +1,66 @@
 const socket = io();
-const input = document.getElementById('m');
-const messages = document.getElementById('messages');
-const form = document.querySelector("form");
 
-var name = "";
+const messageContent = document.querySelector(".message-content");
+const messageForm = document.querySelector(".message-form");
+const messageInput = document.querySelector(".message-form input");
 
-form.addEventListener("submit", event => {
+const userContent = document.querySelector(".user-content");
+const userCount = document.querySelector("#user-count");
+const userName = document.querySelector("#user-name");
+
+
+// DOM SCRIPTS ================================================================
+messageForm.addEventListener("submit", event => {
     event.preventDefault();
     
-    var element = document.createElement('li');
-    var textNode = document.createTextNode("Me:" + input.value);
-    element.appendChild(textNode);
-    messages.appendChild(element);
+    let username = userName.innerText;
+    let message = messageInput.value;
     
-    socket.emit("chat message", input.value);
-    input.value = " ";
+    if(message === "") return;
+    
+    let element = document.createElement("li");
+    element.classList.add("message-me");
+    let node = document.createTextNode(`${username}: ${message}`);
+    element.appendChild(node);
+    messageContent.appendChild(element);
+   
+    socket.emit("message", {username, message});
+    messageInput.value = " ";
+
     return false;
 });
 
-input.addEventListener("focus", event => {
-    socket.emit("typing", name);
-});
-
+// SOCKET SCRIPTS =============================================================
 socket.on("connect", () => {
-    let inputtedName = prompt("Enter your name");
-    socket.emit("assign", { name: inputtedName });
-    name = inputtedName;
+    socket.emit("register", ({ users, name }) => {
+        userCount.innerHTML = users.length;
+        userName.innerHTML = name;
+        
+        users.forEach( user => {
+            let element = document.createElement("li");
+            let node = document.createTextNode(`${user.name}`);
+            
+            element.appendChild(node);
+            userContent.appendChild(element);
+        });
+    });
 });
 
-socket.on('alert', msg => {
-    var element = document.createElement('li');
-    var textNode = document.createTextNode(msg);
-    element.appendChild(textNode);
-    messages.appendChild(element);
+socket.on("update", ({ users }) => {
+    userCount.innerHTML = users.length;
+
+    userContent.innerHTML = "";
+    users.forEach( user => {
+        let element = document.createElement("li");
+        let node = document.createTextNode(`${user.name}`);
+        element.appendChild(node);
+        userContent.appendChild(element);
+    });
 });
 
-socket.on('chat message', msg => {
-    var element = document.createElement('li');
-    var textNode = document.createTextNode(msg);
-    element.appendChild(textNode);
-    messages.appendChild(element);
+socket.on("message", ({username, message}) => {
+    let element = document.createElement("li");
+    let node = document.createTextNode(`${username}: ${message}`);
+    element.appendChild(node);
+    messageContent.appendChild(element);
 });

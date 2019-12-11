@@ -13,7 +13,7 @@ h1, h2, h3, h4, h5 {
 ul {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 5px;
 }
 
 .container {
@@ -47,6 +47,10 @@ ul {
 .message-content {
     flex-grow: 1;
     overflow-y: scroll;
+}
+
+.message-me {
+    color: red;
 }
 
 .message-form {

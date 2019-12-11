@@ -2,31 +2,45 @@ function socket(app)
 {
     const server = require('http').createServer(app);
     const io = require('socket.io')(server);
-
-    var roomDetails = {
-        numClients: 0,
-        members: []
-    };    
+    
+    var chatDetails = {
+        users: [],
+    };
     
     io.on('connection', socket => {
-        socket.on("assign", data => {
-            roomDetails.numClients++;
-            roomDetails.members.push(data.name);
-            socket.broadcast.emit("alert", `${data.name} has joined the room`);
+        console.log("a user has connected");
+        
+        socket.on("register", fn => {
+            let assignedName = "user-" + socket.id.substr(0, 5);
+            let user = { id: socket.id, name: assignedName };
+            
+            chatDetails.users.push(user);
+            
+            fn({ users: chatDetails.users, name: assignedName }); 
+        
+            socket.broadcast.emit("update", chatDetails);
+            
+            console.log(`user was assigned the name ${assignedName}`);
         });
         
-        socket.on('typing', name => {
-           socket.broadcast.emit("typing", `${name} is typing...`);
+        socket.on("message", ({ username, message }) => {
+           console.log(`${username} sent a message: ${message}`); 
+           
+           socket.broadcast.emit("message", {username, message});
         });
-        
-        socket.on('chat message', msg => {
-            socket.broadcast.emit("chat message", msg);
-        });
-        
+
         socket.on('disconnect', () => {
-            console.log(socket.id);
-            roomDetails.numClients--;
-            io.emit("alert", "a user has left the room");
+            let foundUser = chatDetails.users.find(
+                user => user.id == socket.id
+            );
+            
+            chatDetails.users = chatDetails.users.filter( 
+                user => user.id !== socket.id
+            );
+            
+            socket.broadcast.emit("update", chatDetails);
+            
+            console.log(`${foundUser.name} has disconnected`);
         });
     });
     
@@ -34,8 +48,3 @@ function socket(app)
 }
 
 module.exports = socket;
-
-/*
-    Show who’s online.
-    Add private messaging.
-*/
