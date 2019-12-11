@@ -16,14 +16,17 @@ messageForm.addEventListener("submit", event => {
     let username = userName.innerText;
     let message = messageInput.value;
     
+    // ensure empty input is not sent
     if(message === "") return;
     
+    // append own message to the chat
     let element = document.createElement("li");
     element.classList.add("message-me");
-    let node = document.createTextNode(`${username}: ${message}`);
+    let node = document.createTextNode(`${username} (me): ${message}`);
     element.appendChild(node);
     messageContent.appendChild(element);
    
+    // pass message to others in chat
     socket.emit("message", {username, message});
     messageInput.value = " ";
 
@@ -32,6 +35,7 @@ messageForm.addEventListener("submit", event => {
 
 // SOCKET SCRIPTS =============================================================
 socket.on("connect", () => {
+    // on connect get details of the chat and get a default name
     socket.emit("register", ({ users, name }) => {
         userCount.innerHTML = users.length;
         userName.innerHTML = name;
@@ -47,9 +51,10 @@ socket.on("connect", () => {
 });
 
 socket.on("update", ({ users }) => {
+    // update the state of users in the caht
     userCount.innerHTML = users.length;
-
     userContent.innerHTML = "";
+    
     users.forEach( user => {
         let element = document.createElement("li");
         let node = document.createTextNode(`${user.name}`);
@@ -59,8 +64,15 @@ socket.on("update", ({ users }) => {
 });
 
 socket.on("message", ({username, message}) => {
+    // append received message to the chat
     let element = document.createElement("li");
     let node = document.createTextNode(`${username}: ${message}`);
     element.appendChild(node);
     messageContent.appendChild(element);
+});
+
+socket.on("reconnecting", () => {
+    // clear all content
+    userContent.innerHTML = "";
+    messageContent.innerHTML = "";
 });
