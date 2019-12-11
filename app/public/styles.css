@@ -1,4 +1,101 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 60vw;
+    min-width: 480px;
+    height: 80vh;
+    margin: 15px auto;   
+    padding: 0;
+    box-sizing: border-box;
+    border: 1px solid black;
+    display: flex;
+}
+
+.message-container {
+    width: 70%;
+    border-right: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-header {
+    height: 50px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    border-bottom: 1px solid black;
+}
+
+.message-content {
+    flex-grow: 1;
+    overflow-y: scroll;
+}
+
+.message-form {
+    width: 100%;
+    height: 2rem;
+    box-sizing: border-box;
+    border-top: 1px solid black;
+    display: flex;
+}
+
+.message-form input {
+    height: 100%;
+    flex-grow: 1;
+    box-sizing: border-box;
+}
+
+.message-form button {
+    width: 80px;
+    height: 100%;
+}
+
+.user-container {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-header {
+    height: 50px;
+    padding: 0 10px;
+    flex: display;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-bottom: 1px solid black;
+}
+
+.user-header div {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-header div p {
+    font-size: 0.75em;
+}
+
+.user-content {
+    overflow-y: scroll;
+    flex-grow: 1;
 }

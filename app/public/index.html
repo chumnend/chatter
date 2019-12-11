@@ -5,17 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="Simple Chat App">
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
     <script defer src="/socket.io/socket.io.js"></script>
-    <script defer src="scripts.js"></script>
+    <!-- <script defer src="scripts.js"></script> -->
     
     <title>Chat App</title>
 </head>
 <body>
-    <ul id="messages"></ul>
-    <form action="">
-        <input id="m" autocomplete="off" />
-        <button>Send</button>
-    </form>
+    <div class="container">
+        <div class="message-container">
+            <div class="message-header">
+                <h1>Simple Chat</h1>
+                <h5>By Nicholas Chumney</h5>
+            </div>
+            <ul class="message-content"></ul>
+            <form class="message-form" action="">
+                <input 
+                    type="text" 
+                    autocomplete=false
+                    placeholder="Write your message..."
+                />
+                <button>Send</button>
+            </form>
+        </div>
+        <div class="user-container">
+            <div class="user-header">
+                <div>
+                    <h5>Online: </h5> <p id="count">###</p>
+                </div>
+                <div>
+                    <h5>Name: </h5> <p id="name">USER</p>
+                </div>
+            </div>
+            <ul class="user-content"></ul>    
+        </div>
+    </div>
 </body>
 </html>
