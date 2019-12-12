@@ -10,7 +10,7 @@ const userCount = document.querySelector("#user-count");
 const userName = document.querySelector("#user-name");
 
 // FUNCTIONS ==================================================================
-function createListItem(target, text, classes = [])
+function createListItem(target, text, ...classes)
 {
     let element = document.createElement("li");
     if(classes.length > 0) {
@@ -35,7 +35,7 @@ messageForm.addEventListener("submit", event => {
     createListItem(
         messageContent, 
         `${username} (me): ${message}`, 
-        ["message-me"]
+        "message-me"
     );
    
     // pass message to others in chat
@@ -78,6 +78,10 @@ socket.on("connect", () => {
             createListItem(userContent, `${user.name}`);
         });
     });
+});
+
+socket.on("alert", (msg) => {
+    createListItem(messageContent, msg, "message-alert");
 });
 
 socket.on("update", (res) => {

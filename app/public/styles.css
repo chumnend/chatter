@@ -53,6 +53,11 @@ ul {
     color: red;
 }
 
+.message-alert {
+    color: blue;
+    font-style: italic;
+}
+
 .message-typing {
     width: 100%;
     height: 2rem;

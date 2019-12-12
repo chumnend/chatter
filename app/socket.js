@@ -32,6 +32,7 @@ function socket(app)
             fn({ users: chatDetails.users, name: assignedName }); 
             
             // inform all other clients of the new client 
+            socket.broadcast.emit("alert", `${assignedName} has joined the room`);
             socket.broadcast.emit("update", chatDetails);
         });
         
@@ -47,8 +48,12 @@ function socket(app)
             if( chatDetails.users.some(u => u.name == newName) ) {
                 fn(false);
             } else {
-                let { idx } = lookupUser(socket);
-                chatDetails.users[idx].name = newName;
+                let { user } = lookupUser(socket);
+                
+                let oldName = user.name; 
+                user.name = newName;
+                
+                io.emit("alert", `${oldName} changed name to ${newName}`);
                 io.emit("update", chatDetails);
                 fn(true);
             }
@@ -73,12 +78,15 @@ function socket(app)
         });
 
         socket.on('disconnect', () => {
+            let { user } = lookupUser(socket);
+            
             // update clients currently in the chat
             chatDetails.users = chatDetails.users.filter( 
                 user => user.id !== socket.id
             );
             
             // broadcasts to to clients about disconnecting client
+            io.emit("alert", `${user.name} has left the room`);
             socket.broadcast.emit("update", chatDetails);
         });
     });
