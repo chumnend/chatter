@@ -23,17 +23,27 @@ function socket(app)
             socket.broadcast.emit("update", chatDetails);
         });
         
-        socket.on("message", ({ username, message }) => {
+        socket.on("message", (res) => {
+            let { username, message } = res;
+            
             // broadcast new message to other clients
             socket.broadcast.emit("message", {username, message});
         });
+        
+        socket.on("name change", (newName, fn) => {
+            // check if name already taken
+            if( chatDetails.users.some(u => u.name == newName) ) {
+                fn(false);
+            } else {
+                let idx = chatDetails.users.findIndex( user => user.id == socket.id );
+                // let oldName = chatDetails.users[idx];
+                chatDetails.users[idx].name = newName;
+                io.emit("update", chatDetails);
+                fn(true);
+            }
+        });
 
         socket.on('disconnect', () => {
-            // lookup the name of the client that is disconnecting
-            let foundUser = chatDetails.users.find(
-                user => user.id == socket.id
-            );
-            
             // update clients currently in the chat
             chatDetails.users = chatDetails.users.filter( 
                 user => user.id !== socket.id
