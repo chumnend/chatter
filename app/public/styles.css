@@ -53,6 +53,21 @@ ul {
     color: red;
 }
 
+.message-typing {
+    width: 100%;
+    height: 2rem;
+    margin: 0;
+    padding: 0;
+    background: lightgrey;
+    display: flex;
+    align-items: center;
+}
+
+.message-typing li {
+    margin: 0;
+    padding: 5px;
+}
+
 .message-form {
     width: 100%;
     height: 2rem;
@@ -108,4 +123,8 @@ ul {
 .user-content {
     overflow-y: scroll;
     flex-grow: 1;
+}
+
+.hide {
+    display: none;
 }

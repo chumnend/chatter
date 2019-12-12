@@ -3,6 +3,7 @@ const socket = io();
 const messageContent = document.querySelector(".message-content");
 const messageForm = document.querySelector(".message-form");
 const messageInput = document.querySelector(".message-form input");
+const messageTyping = document.querySelector(".message-typing");
 
 const userContent = document.querySelector(".user-content");
 const userCount = document.querySelector("#user-count");
@@ -44,7 +45,15 @@ messageForm.addEventListener("submit", event => {
     return false;
 });
 
-userName.addEventListener("click", () => {
+messageInput.addEventListener("focusin", (event) => {
+    socket.emit("start typing"); 
+});
+
+messageInput.addEventListener("focusout", (event) => {
+    socket.emit("stop typing"); 
+});
+
+userName.addEventListener("click", (event) => {
     let newName = prompt("Enter New Name: ");
     
     socket.emit("name change", newName, (res) => {
@@ -72,12 +81,25 @@ socket.on("connect", () => {
 });
 
 socket.on("update", (res) => {
-    let { users } = res;
+    let { users, typing } = res;
     
-    // update the state of users in the caht
+    // update typing list
+    if(typing.length == 0) {
+        messageTyping.classList.add("hide");
+    } 
+    else{
+        messageTyping.classList.remove("hide");
+        messageTyping.innerHTML = "";
+        
+        typing.length == 1
+            ? createListItem(messageTyping, `${typing[0]} is typing...`)
+            : createListItem(messageTyping, `Multiple users are typing...`);
+    }
+    
+    // update the state of users in the chat
     userCount.innerHTML = users.length;
-    userContent.innerHTML = "";
     
+    userContent.innerHTML = "";
     users.forEach( user => {
         createListItem(userContent, `${user.name}`);
     });

@@ -5,7 +5,19 @@ function socket(app)
     
     var chatDetails = {
         users: [],
+        typing: []
     };
+    
+    function lookupUser(socket) {
+        let idx = chatDetails.users.findIndex( 
+                user => user.id == socket.id 
+            );
+            
+        return { 
+            idx,
+            user: chatDetails.users[idx]
+        };
+    }
     
     io.on('connection', socket => {
         socket.on("register", fn => {
@@ -35,12 +47,29 @@ function socket(app)
             if( chatDetails.users.some(u => u.name == newName) ) {
                 fn(false);
             } else {
-                let idx = chatDetails.users.findIndex( user => user.id == socket.id );
-                // let oldName = chatDetails.users[idx];
+                let { idx } = lookupUser(socket);
                 chatDetails.users[idx].name = newName;
                 io.emit("update", chatDetails);
                 fn(true);
             }
+        });
+        
+        socket.on("start typing", () => {
+            let { user } = lookupUser(socket);
+            
+            chatDetails.typing.push(user.name);
+            
+            socket.broadcast.emit("update", chatDetails);
+        });
+        
+        socket.on("stop typing", () => {
+            let { user } = lookupUser(socket);
+            
+            chatDetails.typing = chatDetails.typing.filter( t => {
+                t !== user.name;
+            });
+            
+            socket.broadcast.emit("update", chatDetails);
         });
 
         socket.on('disconnect', () => {
