@@ -19,28 +19,56 @@ function createListItem(target, text, ...classes)
     let node = document.createTextNode(text);
     element.appendChild(node);
     target.appendChild(element);
+    
+    return element;
 }
 
 // DOM SCRIPTS ================================================================
 messageForm.addEventListener("submit", event => {
     event.preventDefault();
     
-    let username = userName.innerText;
+    let sender = userName.innerText;
     let message = messageInput.value;
     
     // ensure empty input is not sent
-    if(message === "") return;
+    if(!message || message.trim() === "") {
+        return false;
+    }
+    
+    
+    // check if private message
+    if(message.startsWith("::")) {
+        let extracted = /(::)(\S+)\s(.+\b)/.exec(message);
+        
+        // append own message to the chat
+        createListItem(
+            messageContent, 
+            `${sender} (me) to ${extracted[2]}: ${extracted[3]}`, 
+            "message-me", 
+            "message-private"
+        );
+        
+        // emit to target user
+        socket.emit("private message", { 
+            sender,
+            reciever: extracted[2],
+            message: extracted[3]
+        });
+         messageInput.value = "";
+        
+        return false;
+    }
     
     // append own message to the chat
     createListItem(
         messageContent, 
-        `${username} (me): ${message}`, 
+        `${sender} (me): ${message}`, 
         "message-me"
     );
-   
+    
     // pass message to others in chat
-    socket.emit("message", {username, message});
-    messageInput.value = " ";
+    socket.emit("message", { sender, message });
+    messageInput.value = "";
 
     return false;
 });
@@ -70,12 +98,15 @@ socket.on("connect", () => {
     // on connect get details of the chat and get a default name
     socket.emit("register", (res) => {
         let { users, name } = res;
-        
+
         userCount.innerHTML = users.length;
         userName.innerHTML = name;
-        
+
         users.forEach( user => {
-            createListItem(userContent, `${user.name}`);
+            let ele = createListItem(userContent, `${user.name}`);
+            ele.addEventListener("click", (event) => {
+                messageInput.value = `::${user.name} `;
+            });
         });
     });
 });
@@ -94,26 +125,40 @@ socket.on("update", (res) => {
     else{
         messageTyping.classList.remove("hide");
         messageTyping.innerHTML = "";
-        
+
         typing.length == 1
             ? createListItem(messageTyping, `${typing[0]} is typing...`)
             : createListItem(messageTyping, `Multiple users are typing...`);
     }
-    
+
     // update the state of users in the chat
     userCount.innerHTML = users.length;
-    
+
     userContent.innerHTML = "";
     users.forEach( user => {
-        createListItem(userContent, `${user.name}`);
+        let ele = createListItem(userContent, `${user.name}`);
+        ele.addEventListener("click", (event) => {
+            messageInput.value = `::${user.name} `;
+        });
     });
 });
 
 socket.on("message", (res) => {
-    let { username, message } = res;
-    
+    let { sender, message } = res;
+
     // append received message to the chat
-    createListItem(messageContent, `${username}: ${message}`);
+    createListItem(messageContent, `${sender}: ${message}`);
+});
+
+socket.on("private message", (res) => {
+    let { sender, message } = res;
+
+    // append received message to the chat
+    createListItem(
+        messageContent,
+        `${sender} (private): ${message}`,
+        "message-private"
+    );
 });
 
 socket.on("reconnecting", () => {

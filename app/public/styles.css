@@ -3,6 +3,7 @@ body {
     padding: 0;
     font-family: 'Lato', sans-serif;
     font-size: 16px;
+    text-align: center;
 }
 
 h1, h2, h3, h4, h5 {
@@ -47,10 +48,15 @@ ul {
 .message-content {
     flex-grow: 1;
     overflow-y: scroll;
+    text-align: left;
 }
 
 .message-me {
     color: red;
+}
+
+.message-private {
+    font-weight: 700;
 }
 
 .message-alert {
@@ -128,6 +134,16 @@ ul {
 .user-content {
     overflow-y: scroll;
     flex-grow: 1;
+}
+
+.user-content li {
+    cursor: pointer;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.user-content li:hover {
+    background: lightgrey;    
 }
 
 .hide {
