@@ -20,9 +20,14 @@ function socket(app)
     }
 
     io.on('connection', socket => {
-        socket.on("register", fn => {
-            // generates a name for new client
-            let assignedName = "guest-" + socket.id.substr(0, 5);
+        socket.on("register", (prevName, fn) => {
+            let assignedName; 
+            if (prevName && !chatDetails.users.some(u => u.name == assignedName) ) {
+                assignedName = prevName;
+            }
+            else {
+                assignedName = "guest-" + socket.id.substr(0, 5);
+            }
 
             // record information about the new client 
             let user = { id: socket.id, name: assignedName };
