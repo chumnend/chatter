@@ -9,6 +9,8 @@ const socket = require('./socket');
 // initilaize the application
 const app = express();
 
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,7 +21,7 @@ if (config.env !== 'test') {
 
 // setup application routes
 app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: __dirname + '/public' });
+  res.render('room');
 });
 
 // add sockets
