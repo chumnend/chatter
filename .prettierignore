@@ -1,0 +1,5 @@
+# Test files
+*.test.js
+
+# Client files
+public/
