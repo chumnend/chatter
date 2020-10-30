@@ -1,6 +1,6 @@
 {
   "name": "simple-chat",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "a chat web application",
   "main": "./src",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev": "nodemon ./src",
     "test": "NODE_ENV=test mocha './{,!(node_modules)/**}/*.test.js' --exit",
     "lint": "npx eslint 'src/**/*.js'",
-    "lint:fix": "prettier --write 'src/**/*.js'"
+    "lint:fix": "npx prettier --write 'src/**/*.js'"
   },
   "keywords": [],
   "author": "Nicholas Chumney",
