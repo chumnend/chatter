@@ -1,4 +1,4 @@
-# Simple Chat App
+# Simple Chat
 A chat web application
 
 # Demo

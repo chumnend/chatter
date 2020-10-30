@@ -4,7 +4,9 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const config = require('./config');
+const middleware = require('./middleware');
 const socket = require('./socket');
+const HttpError = require('./utils/HttpError');
 
 // initilaize the application
 const app = express();
@@ -20,9 +22,17 @@ if (config.env !== 'test') {
 }
 
 // setup application routes
-app.get('/', (req, res) => {
+app.get('/', (req, res, next) => {
   res.render('room');
 });
+
+app.all('*', (req, res, next) => {
+  const error = new HttpError(404, 'Page not found');
+  return next(error);
+});
+
+// setup error handler;
+app.use(middleware.handleError);
 
 // add sockets
 const server = socket(app);
