@@ -23,7 +23,11 @@ if (config.env !== 'test') {
 
 // setup application routes
 app.get('/', (req, res, next) => {
-  res.render('room');
+  return res.render('lobby');
+});
+
+app.get('/:id', (req, res, next) => {
+  return res.render('room');
 });
 
 app.all('*', (req, res, next) => {
