@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const config = require('./config');
 const middleware = require('./middleware');
 const socket = require('./socket');
-const HttpError = require('./utils/HttpError');
+const utils = require('./utils');
 
 // initilaize the application
 const app = express();
@@ -23,11 +23,11 @@ if (config.env !== 'test') {
 
 // setup application routes
 app.get('/', (req, res, next) => {
-  res.render('room');
+  return res.render('room');
 });
 
 app.all('*', (req, res, next) => {
-  const error = new HttpError(404, 'Page not found');
+  const error = utils.createError(404, 'Path not found');
   return next(error);
 });
 

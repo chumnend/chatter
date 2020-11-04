@@ -1,9 +1,8 @@
 # Simple Chat
-A chat web application
+A chat web application created using **ejs, Node.js, Express.js and Socket io**.
 
 ## Demo
-TBD
-
+![simple-chat](simple-chat-capture.gif)
 
 ## Development Setup
 
