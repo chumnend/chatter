@@ -13,7 +13,7 @@ A chat web application created using **ejs, Node.js, Express.js and Socket io**.
 ### Configuration
 1) Clone the repo
 2) Install dependencies with `npm install`
-3) Copy the file env.example and rename it .env. This file contains the name of required environment variables needed for the application to work.
+3) Copy the file `.env.example` and rename it `.env`. This file contains the name of required environment variables needed for the application to work.
 
 ```
 NODE_ENV=           # 'development' or 'production'

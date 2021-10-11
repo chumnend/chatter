@@ -7,28 +7,29 @@
     "start": "node ./src",
     "dev": "nodemon ./src",
     "test": "NODE_ENV=test mocha './{,!(node_modules)/**}/*.test.js' --exit",
-    "lint": "npx eslint 'src/**/*.js'",
-    "lint:fix": "npx prettier --write 'src/**/*.js'"
+    "lint": "./node_modules/.bin/eslint 'src/**/*.js'",
+    "lint:fix": "./node_modules/.bin/eslint ./src --fix && ./node_modules/.bin/prettier --write 'src/**/*.js'",
+    "clean": "rm -rf node_modules"
   },
   "keywords": [],
   "author": "Nicholas Chumney",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "ejs": "^3.1.5",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
-    "helmet": "^4.1.1",
+    "helmet": "^4.6.0",
     "morgan": "^1.10.0",
-    "socket.io": "^2.4.0"
+    "socket.io": "^4.2.0"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "chai-http": "^4.3.0",
-    "eslint": "^7.12.0",
-    "eslint-config-prettier": "^6.14.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "mocha": "^6.2.3",
-    "nodemon": "^2.0.6",
-    "prettier": "^2.1.2"
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mocha": "^9.1.2",
+    "nodemon": "^2.0.13",
+    "prettier": "^2.4.1"
   }
 }
