@@ -27,4 +27,4 @@ PORT=               # port to run the server on
 Use `npm test` to run test cases using mocha
 
 ### Deployment
-Upon merge to `stable` branch, app will be deployed to Heroku
+Not deployed.
